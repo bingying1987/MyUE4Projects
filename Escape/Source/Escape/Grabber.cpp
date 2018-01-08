@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Grabber.h"
-
-
+#include "DrawDebugHelpers.h"
+#include "Engine.h"
 // Sets default values for this component's properties
 UGrabber::UGrabber()
 {
@@ -33,6 +33,20 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	FVector PlayViewPointLocation;
 	FRotator PlayViewPointRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(PlayViewPointLocation, PlayViewPointRotation);
-	UE_LOG(LogTemp, Warning, TEXT("Location: %s,Position: %s"), *PlayViewPointLocation.ToString(), *PlayViewPointRotation.ToString());
+//	UE_LOG(LogTemp, Warning, TEXT("Location: %s,Position: %s"), *PlayViewPointLocation.ToString(), *PlayViewPointRotation.ToString());
+
+	FVector PointEnd = PlayViewPointLocation + PlayViewPointRotation.Vector() * Reach;
+	DrawDebugLine(GetWorld(), PlayViewPointLocation, PointEnd, FColor::Red, false, 0, 0, 10.0f);
+
+	//所有可以被追踪的物体要勾选 simulity Physics
+	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
+	FHitResult Hit;
+	
+	GetWorld()->LineTraceSingleByObjectType(Hit, PlayViewPointLocation, PointEnd, FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), TraceParameters);
+	AActor* ActorHit = Hit.GetActor();
+	if (ActorHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s"), *(ActorHit->GetName()));
+	}
 }
 
