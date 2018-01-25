@@ -14,12 +14,14 @@ UOpenDoor::UOpenDoor()
 }
 void UOpenDoor::OpenDoor()
 {
-	GetOwner()->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
+//	GetOwner()->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f)
+	Openquest.Broadcast();
 }
 
 void UOpenDoor::CloseDoor()
 {
-	GetOwner()->SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
+//	GetOwner()->SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
+	Closequest.Broadcast();
 }
 
 // Called when the game starts
@@ -41,10 +43,8 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	if (GetTotalMassOfActorsInPlate() > 40.0f)
 	{
 		OpenDoor();
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
 	}
-
-	if (GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorCloseDelay)
+	else
 	{
 		CloseDoor();
 	}

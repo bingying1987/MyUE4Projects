@@ -7,6 +7,7 @@
 #include "Engine.h"
 #include "OpenDoor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpenDoorRequest);//创建委托,类似OC.
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ESCAPE_API UOpenDoor : public UActorComponent
@@ -17,6 +18,10 @@ public:
 	// Sets default values for this component's properties
 	UOpenDoor();
 
+	UPROPERTY(BlueprintAssignable)
+	FOnOpenDoorRequest Openquest;
+	UPROPERTY(BlueprintAssignable)
+	FOnOpenDoorRequest Closequest;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
